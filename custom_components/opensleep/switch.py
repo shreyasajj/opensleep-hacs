@@ -30,7 +30,8 @@ class AwayModeSwitch(SwitchEntity):
         self._attr_unique_id = f"opensleep_away_mode_{prefix}"
         self._remove = None
         self._attr_available = True
-        self._attr_is_on = None  # Unknown until first MQTT message
+        self._attr_is_on = False  # make visible in HA UI
+
 
     @property
     def device_info(self):
