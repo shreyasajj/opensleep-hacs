@@ -1,7 +1,7 @@
 from __future__ import annotations
 import logging
 
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -15,8 +15,9 @@ from .mqtt_client import OpensleepMqtt
 _LOGGER = logging.getLogger(__name__)
 
 class PresenceBinary(BinarySensorEntity):
-    _attr_device_class = "presence"
+    _attr_device_class = BinarySensorDeviceClass.PRESENCE
     _attr_has_entity_name = True
+    _attr_should_poll = False
 
     def __init__(self, client: OpensleepMqtt, name: str, topic: str) -> None:
         self._client = client
@@ -25,6 +26,18 @@ class PresenceBinary(BinarySensorEntity):
         self._attr_unique_id = f"{name.lower().replace(' ', '_')}_{topic.replace('/', '_')}"
         self._remove = None
         self._attr_available = True
+        self._attr_is_on = None  # explicit None until first message
+
+    @property
+    def device_info(self):
+        # Group under the same device as your sensors
+        label = self._client.state.device_label or "opensleep"
+        return {
+            "identifiers": {(DOMAIN, label)},
+            "manufacturer": "OpenSleep",
+            "name": self._client.state.device_name or "OpenSleep",
+            "sw_version": self._client.state.device_version or None,
+        }
 
     @property
     def is_on(self) -> bool | None:
@@ -35,8 +48,10 @@ class PresenceBinary(BinarySensorEntity):
         def _listener(topic: str, payload: str) -> None:
             if topic == self._topic:
                 val = payload.strip().lower()
-                if val in ("1", "true", "on", "yes"): self._attr_is_on = True
-                elif val in ("0", "false", "off", "no"): self._attr_is_on = False
+                if val in ("1", "true", "on", "yes"):
+                    self._attr_is_on = True
+                elif val in ("0", "false", "off", "no"):
+                    self._attr_is_on = False
                 else:
                     try:
                         self._attr_is_on = bool(int(val))
@@ -56,12 +71,13 @@ class PresenceBinary(BinarySensorEntity):
             self._remove()
             self._remove = None
 
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
     client: OpensleepMqtt = hass.data[DOMAIN][entry.entry_id]
     prefix = entry.data.get(CONF_PREFIX, DEFAULT_PREFIX)
     entities = [
-        PresenceBinary(client, "Presence Any", TOPIC_PRESENCE_ANY.format(p=prefix)),
-        PresenceBinary(client, "Presence Left", TOPIC_PRESENCE_LEFT.format(p=prefix)),
+        PresenceBinary(client, "Presence Any",   TOPIC_PRESENCE_ANY.format(p=prefix)),
+        PresenceBinary(client, "Presence Left",  TOPIC_PRESENCE_LEFT.format(p=prefix)),
         PresenceBinary(client, "Presence Right", TOPIC_PRESENCE_RIGHT.format(p=prefix)),
     ]
     async_add_entities(entities)
