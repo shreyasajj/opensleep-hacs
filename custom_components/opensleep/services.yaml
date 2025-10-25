@@ -1,0 +1,65 @@
+calibrate:
+  name: Calibrate presence
+  description: Trigger presence calibration (do not sit on the bed).
+set_away_mode:
+  name: Set away mode
+  description: Publish a bool to actions/set_away_mode
+  fields:
+    away:
+      required: true
+      example: true
+      selector:
+        boolean: {}
+set_prime:
+  name: Set prime time
+  description: Set the daily prime time (HH:MM).
+  fields:
+    time:
+      required: true
+      example: "06:30"
+      selector:
+        text:
+          type: text
+set_profile:
+  name: Set profile field
+  description: Publish TARGET.FIELD=VALUE to actions/set_profile
+  fields:
+    target_side:
+      required: true
+      selector:
+        select:
+          options:
+            - both
+            - left
+            - right
+    field:
+      required: true
+      selector:
+        select:
+          options:
+            - sleep
+            - wake
+            - temperatures
+            - alarm
+    value:
+      required: true
+      selector:
+        text:
+          type: text
+set_presence_config:
+  name: Set presence config
+  description: Publish FIELD=VALUE to actions/set_presence_config
+  fields:
+    field:
+      required: true
+      selector:
+        select:
+          options:
+            - baselines
+            - threshold
+            - debounce_count
+    value:
+      required: true
+      selector:
+        text:
+          type: text

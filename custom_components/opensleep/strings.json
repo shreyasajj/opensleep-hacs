@@ -1,0 +1,19 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OpenSleep (MQTT)",
+        "description": "Set the MQTT topic prefix (default: opensleep)",
+        "data": {
+          "prefix": "MQTT topic prefix"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect"
+    },
+    "abort": {
+      "single_instance_allowed": "Only a single instance is allowed"
+    }
+  }
+}
