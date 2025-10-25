@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Optional
@@ -16,7 +17,7 @@ from .const import (
     TOPIC_SENSOR_HUMIDITY, TOPIC_SENSOR_MCU_TEMP,
     TOPIC_FROZEN_MODE, TOPIC_FROZEN_HWINFO, TOPIC_FROZEN_LEFT_TEMP, TOPIC_FROZEN_RIGHT_TEMP,
     TOPIC_FROZEN_HEATSINK, TOPIC_FROZEN_LEFT_TARGET, TOPIC_FROZEN_RIGHT_TARGET,
-    TOPIC_CFG_TIMEZONE, TOPIC_CFG_AWAY_MODE, TOPIC_CFG_PRIME, TOPIC_CFG_LED_IDLE,
+    TOPIC_CFG_TIMEZONE, TOPIC_CFG_PRIME, TOPIC_CFG_LED_IDLE,
     TOPIC_CFG_LED_ACTIVE, TOPIC_CFG_LED_BAND, TOPIC_CFG_PROFILE_TYPE,
     TOPIC_CFG_PROFILE_LEFT_SLEEP, TOPIC_CFG_PROFILE_LEFT_WAKE, TOPIC_CFG_PROFILE_LEFT_TEMPS,
     TOPIC_CFG_PROFILE_LEFT_ALARM, TOPIC_CFG_PROFILE_RIGHT_SLEEP, TOPIC_CFG_PROFILE_RIGHT_WAKE,
@@ -57,8 +58,8 @@ SENSOR_SPECS: list[SensorDef] = [
     SensorDef("Heatsink Temp (°C)", TOPIC_FROZEN_HEATSINK, UnitOfTemperature.CELSIUS, value_fn=as_celsius_from_centi),
     SensorDef("Left Target (°C/disabled)", TOPIC_FROZEN_LEFT_TARGET, UnitOfTemperature.CELSIUS, value_fn=as_celsius_from_centi),
     SensorDef("Right Target (°C/disabled)", TOPIC_FROZEN_RIGHT_TARGET, UnitOfTemperature.CELSIUS, value_fn=as_celsius_from_centi),
+    # Config echo (away_mode removed; now a switch)
     SensorDef("Timezone", TOPIC_CFG_TIMEZONE),
-    SensorDef("Away Mode (cfg)", TOPIC_CFG_AWAY_MODE),
     SensorDef("Prime Time", TOPIC_CFG_PRIME),
     SensorDef("LED Idle", TOPIC_CFG_LED_IDLE),
     SensorDef("LED Active", TOPIC_CFG_LED_ACTIVE),
@@ -75,6 +76,7 @@ SENSOR_SPECS: list[SensorDef] = [
     SensorDef("Presence Baselines", TOPIC_CFG_PRES_BASELINES),
     SensorDef("Presence Threshold", TOPIC_CFG_PRES_THRESHOLD),
     SensorDef("Presence Debounce", TOPIC_CFG_PRES_DEBOUNCE),
+    # Result aggregator
     SensorDef("Last Action", TOPIC_RESULT_ACTION),
     SensorDef("Last Status", TOPIC_RESULT_STATUS),
     SensorDef("Last Message", TOPIC_RESULT_MESSAGE),
