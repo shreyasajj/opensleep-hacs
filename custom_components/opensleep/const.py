@@ -1,5 +1,5 @@
 DOMAIN = "opensleep"
-PLATFORMS = ["sensor", "binary_sensor", "button"]
+PLATFORMS = ["sensor", "binary_sensor", "button", "switch"]
 CONF_PREFIX = "prefix"
 DEFAULT_PREFIX = "opensleep"
 
